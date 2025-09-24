@@ -9,7 +9,7 @@ default = {}
 
 variable "aws_region" {
 description = "AWS region"
-default = {}
+type = string
 }
 
 variable "lambda" {
