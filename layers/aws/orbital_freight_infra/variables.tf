@@ -18,6 +18,6 @@ default = {}
 }
 
 variable "testvar" {
-description = "test to check pipe"
+description = "test to check pipeline"
 default = {}
 }
