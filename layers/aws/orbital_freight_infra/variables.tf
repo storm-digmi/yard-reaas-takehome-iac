@@ -19,3 +19,8 @@ description = "Lambda Info"
 type = string
 default = {}
 }
+
+variable "testvar" {
+description = "test to check pipe"
+default = {}
+}
