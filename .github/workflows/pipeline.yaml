@@ -77,7 +77,7 @@ jobs:
       - name: Terraform Plan
         id: plan
         working-directory: layers/aws/orbital_freight_infra
-        run: terraform plan -input=false -out=terraform.plan -var-file="${{ env.AWS_ENV }}/${{ env.AWS_ENV }}.tfvars"
+        run: terraform plan -input=false -out=terraform.plan -var-file="orbital_freight_infra.tfvars"
         continue-on-error: false
 
       - name: Terraform Apply
