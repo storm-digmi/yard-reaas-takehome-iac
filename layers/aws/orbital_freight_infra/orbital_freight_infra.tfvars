@@ -2,7 +2,7 @@ project_info = {
     name = "orbital-freight-podinfo"
 }
 
-region = "eu-central-1"
+aws_region = "eu-central-1"
 
 lambda = {
     image_uri = ""
