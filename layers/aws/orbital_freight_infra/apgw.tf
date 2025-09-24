@@ -2,7 +2,7 @@
 # API Gateway v2 (HTTP API) → Lambda alias
 ############################
 resource "aws_apigatewayv2_api" "http" {
-    name = "${var.project.name}-http"
+    name = "${var.project_info.name}-http"
     protocol_type = "HTTP"
 }
 

@@ -12,11 +12,11 @@ function_name = "${var.project_info.name}-svc"
     memory_size = var.lambda.memory_mb
     timeout = var.lambda.timeout_seconds
 
-    environment {
-        variables = {
-        SECRET_NAME = aws_secretsmanager_secret.api_key.name
-        }
-    }
+    # environment {
+    #     variables = {
+    #     SECRET_NAME = aws_secretsmanager_secret.api_key.name
+    #     }
+    # }
 }
 
 # Publish a numbered version on each apply (CI will typically run this after pushing a new image)
