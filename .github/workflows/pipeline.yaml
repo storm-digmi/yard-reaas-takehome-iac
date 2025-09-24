@@ -68,7 +68,7 @@ jobs:
           cat <<EOF > backend.conf
           bucket         = "${{ env.BACKEND_CONFIG_S3_BUCKET }}"
           key            = "orbital.tfstate"
-          dynamodb_table = "${{ env.BACKEND_CONFIG_DYNAMODB }}"
+          use_lockfile   = true
           region         = "${{ env.AWS_REGION }}"
           EOF
 
