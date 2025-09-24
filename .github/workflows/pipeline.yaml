@@ -1,0 +1,88 @@
+name: Infrastructure-Pipeline
+on:
+  workflow_dispatch:
+    inputs:
+      auto-apply:
+        type: boolean
+        description: Auto Apply after Plan (Y/N)
+        required: true
+        default: false
+
+  push:
+    branches:
+      - main
+    paths:
+      - "layers/aws/orbital_freight_infra/**"
+
+permissions:
+      id-token: write   
+      contents: read    
+
+run-name: Infrastructure-Workflow
+
+jobs:
+  InfrastructureDeploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Preliminary Operation
+        shell: bash
+        env:
+          environment: ${{ github.ref_name }}
+          AUTOMATION_PROD: ${{ vars.AUTOMATION_PROD }}
+        run: |
+          export AWS_ACCOUNT_ID=$(echo "$AUTOMATION_PROD" | jq -r '.AWS_ACCOUNT_ID')
+          export AWS_IAM_ROLE=$(echo "$AUTOMATION_PROD" | jq -r '.AWS_IAM_ROLE')
+          export BACKEND_CONFIG_S3_BUCKET=$(echo "$AUTOMATION_PROD" | jq -r '.S3_BUCKET')
+          export BACKEND_CONFIG_DYNAMODB=$(echo "$AUTOMATION_PROD" | jq -r '.DYNAMODB_TABLE')
+          AWS_ENV="prod"
+
+          # Sharing Variables
+          echo "AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID" >> $GITHUB_ENV
+          echo "AWS_IAM_ROLE=$AWS_IAM_ROLE" >> $GITHUB_ENV
+          echo "AWS_REGION=eu-south-1" >> $GITHUB_ENV
+          echo "BACKEND_CONFIG_S3_BUCKET=$BACKEND_CONFIG_S3_BUCKET" >> $GITHUB_ENV
+          echo "BACKEND_CONFIG_DYNAMODB=$BACKEND_CONFIG_DYNAMODB" >> $GITHUB_ENV
+          echo "AWS_ENV=$AWS_ENV" >> $GITHUB_ENV
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: arn:aws:iam::${{env.AWS_ACCOUNT_ID}}:role/${{env.AWS_IAM_ROLE}}
+          role-session-name: application-session
+          aws-region: eu-west-1
+          role-duration-seconds: 7200
+
+      - name: Git clone the repository
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ github.repository }}
+          ref: ${{ github.ref_name }}
+
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Terraform Init
+        id: init
+        working-directory: layers/aws/orbital_freight_infra
+        run: | 
+          cat <<EOF > backend.conf
+          bucket         = "${{ env.BACKEND_CONFIG_S3_BUCKET }}"
+          key            = "orbital.tfstate"
+          dynamodb_table = "${{ env.BACKEND_CONFIG_DYNAMODB }}"
+          region         = "${{ env.AWS_REGION }}"
+          EOF
+
+          terraform init -no-color -backend-config='backend.conf'
+
+      - name: Terraform Plan
+        id: plan
+        working-directory: layers/aws/orbital_freight_infra
+        run: terraform plan -input=false -out=terraform.plan -var-file="${{ env.AWS_ENV }}/${{ env.AWS_ENV }}.tfvars"
+        continue-on-error: false
+
+      - name: Terraform Apply
+        id: apply
+        working-directory: layers/aws/orbital_freight_infra
+        if: inputs.auto-apply == true
+        run: terraform apply -input=false terraform.plan
+ 
