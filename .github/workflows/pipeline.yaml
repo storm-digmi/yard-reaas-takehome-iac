@@ -39,7 +39,7 @@ jobs:
           # Sharing Variables
           echo "AWS_ACCOUNT_ID=$AWS_ACCOUNT_ID" >> $GITHUB_ENV
           echo "AWS_IAM_ROLE=$AWS_IAM_ROLE" >> $GITHUB_ENV
-          echo "AWS_REGION=eu-south-1" >> $GITHUB_ENV
+          echo "AWS_REGION=eu-central-1" >> $GITHUB_ENV
           echo "BACKEND_CONFIG_S3_BUCKET=$BACKEND_CONFIG_S3_BUCKET" >> $GITHUB_ENV
           echo "BACKEND_CONFIG_DYNAMODB=$BACKEND_CONFIG_DYNAMODB" >> $GITHUB_ENV
           echo "AWS_ENV=$AWS_ENV" >> $GITHUB_ENV
@@ -49,7 +49,7 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::${{env.AWS_ACCOUNT_ID}}:role/${{env.AWS_IAM_ROLE}}
           role-session-name: application-session
-          aws-region: eu-west-1
+          aws-region: eu-central-1
           role-duration-seconds: 7200
 
       - name: Git clone the repository
