@@ -13,6 +13,12 @@ resource "aws_codedeploy_deployment_group" "lambda_dg" {
     deployment_group_name = "${var.project_info.name}-cd-dg"
     service_role_arn = aws_iam_role.codedeploy_service.arn
 
+    # Required for Lambda: BLUE_GREEN + WITH_TRAFFIC_CONTROL
+    deployment_style {
+        deployment_type = "BLUE_GREEN"
+        deployment_option = "WITH_TRAFFIC_CONTROL"
+    }
+
     # Canary 10% for 5 minutes (built-in)
     deployment_config_name = "CodeDeployDefault.LambdaCanary10Percent5Minutes"
 
