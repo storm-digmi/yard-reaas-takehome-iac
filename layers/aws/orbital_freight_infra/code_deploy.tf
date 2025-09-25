@@ -4,7 +4,7 @@
 # are specified at deployment time via the AppSpec. We do wire in alarms + rollback here.
 ############################
 resource "aws_codedeploy_app" "lambda_app" {
-    name = "${var.project_Info.name}-cd-app"
+    name = "${var.project_info.name}-cd-app"
     compute_platform = "Lambda"
 }
 
