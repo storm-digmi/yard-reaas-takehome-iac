@@ -2,7 +2,7 @@
 # Lambda (container image) + Alias for Blue/Green
 ############################
 resource "aws_lambda_function" "svc" {
-function_name = "${var.project_info.name}-svc"
+    function_name = "${var.project_info.name}-svc"
     role = aws_iam_role.lambda_exec.arn
     package_type = "Image"
     image_uri = var.lambda.image_uri
@@ -17,11 +17,19 @@ function_name = "${var.project_info.name}-svc"
     #     SECRET_NAME = aws_secretsmanager_secret.api_key.name
     #     }
     # }
+
+    # Nice error message if the image does not exist yet
+    lifecycle {
+        precondition {
+            condition = length(data.aws_ecr_image.selected.image_digest) > 0
+            error_message = "ECR image with tag '${var.image_tag}' not found in ${aws_ecr_repository.podinfo.name}. Build & push first, then re-apply."
+        }
+    }
 }
 
 # Publish a numbered version on each apply (CI will typically run this after pushing a new image)
 resource "aws_lambda_alias" "prod" {
-    name = "alias-test"
+    name = "prod"
     description = "Alias for blue/green"
     function_name = aws_lambda_function.svc.function_name
     function_version = aws_lambda_function.svc.version

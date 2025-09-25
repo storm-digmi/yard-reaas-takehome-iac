@@ -10,3 +10,10 @@ resource "aws_ecr_repository" "podinfo" {
         scan_on_push = true
     }
 }
+
+# Resolve the image by TAG and get its immutable DIGEST (fails if TAG not found)
+# This makes Terraform wait until an image with var.image_tag exists.
+data "aws_ecr_image" "selected" {
+    repository_name = aws_ecr_repository.podinfo.name
+    image_tag = var.image_tag
+}

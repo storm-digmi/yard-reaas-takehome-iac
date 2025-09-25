@@ -21,3 +21,10 @@ variable "testvar" {
 description = "test to check pipeline"
 default = {}
 }
+
+
+variable "image_tag" {
+description = "ECR image tag to deploy (must exist). Use 'latest' or a Git SHA."
+type = string
+default = "latest"
+}

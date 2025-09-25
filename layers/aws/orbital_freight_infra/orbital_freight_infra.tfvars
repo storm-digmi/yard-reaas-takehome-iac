@@ -9,3 +9,5 @@ lambda = {
     memory_mb = 512
     timeout_seconds = 15
 }
+
+image_tag = "latest"
