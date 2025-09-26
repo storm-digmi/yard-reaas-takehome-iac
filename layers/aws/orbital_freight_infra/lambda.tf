@@ -6,6 +6,7 @@ resource "aws_lambda_function" "svc" {
     role = aws_iam_role.lambda_exec.arn
     package_type = "Image"
     image_uri = var.lambda.image_uri
+    publish      = true  
 
     architectures = ["x86_64"]
 
@@ -33,4 +34,8 @@ resource "aws_lambda_alias" "prod" {
     description = "Alias for blue/green"
     function_name = aws_lambda_function.svc.function_name
     function_version = aws_lambda_function.svc.version
+
+    lifecycle {
+        ignore_changes = [function_version, routing_config]  # <— evita drift quando CodeDeploy sposta l’alias
+   }
 }
