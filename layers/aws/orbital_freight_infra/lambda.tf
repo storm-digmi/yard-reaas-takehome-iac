@@ -26,7 +26,7 @@ resource "aws_lambda_function" "svc" {
             condition = length(data.aws_ecr_image.selected.image_digest) > 0
             error_message = "ECR image with tag '${var.image_tag}' not found in ${aws_ecr_repository.podinfo.name}. Build & push first, then re-apply."
         }
-        ignore_changes = [image_uri, qualified_arn, qualified_invoke_arn, version]
+        ignore_changes = [image_uri, version]
     }
 }
 
