@@ -109,13 +109,13 @@ resource "aws_cloudwatch_log_data_protection_policy" "mask_super_secret" {
     Description = "Mask SUPER_SECRET_TOKEN value if it ever appears in logs"
     Version     = "2021-06-01"
     Statement   = [
-      # (facoltativo) solo audit: registra i match trovati
+      
       {
         Sid            = "audit-policy"
         DataIdentifier = ["SuperSecretTokenExact"]
         Operation      = { Audit = { FindingsDestination = {} } }
       },
-      # redazione/mask effettiva
+      
       {
         Sid            = "redact-policy"
         DataIdentifier = ["SuperSecretTokenExact"]
@@ -126,7 +126,7 @@ resource "aws_cloudwatch_log_data_protection_policy" "mask_super_secret" {
       CustomDataIdentifier = [
         {
           Name  = "SuperSecretTokenExact"
-          # random_password.super_secret_token.result è alfanumerico, quindi OK come regex “letterale”
+          
           Regex = random_password.super_secret_token.result
         }
       ]

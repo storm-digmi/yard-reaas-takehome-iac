@@ -38,6 +38,6 @@ resource "aws_lambda_alias" "prod" {
     function_version = aws_lambda_function.svc.version
 
     lifecycle {
-        ignore_changes = [function_version, routing_config]  # <— evita drift quando CodeDeploy sposta l’alias
+        ignore_changes = [function_version, routing_config]  # <— avoid drift when CodeDeploy moves the alias
    }
 }

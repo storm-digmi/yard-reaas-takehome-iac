@@ -19,8 +19,8 @@ resource "aws_codedeploy_deployment_group" "lambda_dg" {
         deployment_option = "WITH_TRAFFIC_CONTROL"
     }
 
-    # Canary 10% for 2 minutes
-    deployment_config_name = "CodeDeployDefault.LambdaLinear10PercentEvery2Minutes"
+    # Canary 10% for 5 minutes
+    deployment_config_name = "CodeDeployDefault.LambdaCanary10Percent5Minutes"
 
     alarm_configuration {
         alarms = [aws_cloudwatch_metric_alarm.lambda_errors.alarm_name]
