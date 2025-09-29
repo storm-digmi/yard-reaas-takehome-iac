@@ -50,23 +50,33 @@ resource "aws_cloudwatch_log_group" "lambda_lg" {
 resource "aws_cloudwatch_log_data_protection_policy" "mask_super_secret" {
   log_group_name = aws_cloudwatch_log_group.lambda_lg.name
 
-
   policy_document = jsonencode({
     Name        = "${var.project_info.name}-log-masking"
     Description = "Mask SUPER_SECRET_TOKEN value if it ever appears in logs"
     Version     = "2021-06-01"
     Statement   = [
+      # (facoltativo) solo audit: registra i match trovati
       {
-        Sid                  = "MaskExactSuperSecret"
-        DataIdentifiers      = []
-        CustomDataIdentifiers = [
-          {
-            Name  = "SuperSecretTokenExact"
-            Regex = random_password.super_secret_token.result
-          }
-        ]
-        Operation = { Deidentify = { MaskConfig = {} } }
+        Sid            = "audit-policy"
+        DataIdentifier = ["SuperSecretTokenExact"]
+        Operation      = { Audit = { FindingsDestination = {} } }
+      },
+      # redazione/mask effettiva
+      {
+        Sid            = "redact-policy"
+        DataIdentifier = ["SuperSecretTokenExact"]
+        Operation      = { Deidentify = { MaskConfig = {} } }
       }
     ]
+    Configuration = {
+      CustomDataIdentifier = [
+        {
+          Name  = "SuperSecretTokenExact"
+          # random_password.super_secret_token.result è alfanumerico, quindi OK come regex “letterale”
+          Regex = random_password.super_secret_token.result
+        }
+      ]
+    }
   })
 }
+
