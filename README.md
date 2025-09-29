@@ -5,6 +5,13 @@ This repository contains the **Terraform code** that provisions the AWS infrastr
 
 ---
 
+## Architecture Diagram
+
+![Architecture Diagram](docs/yard-reaas.drawio.png)
+
+---
+ 
+
 ## Tools
 - **Terraform** as IaC for AWS resource provisioning.  
 - **GitHub Actions** as CI/CD orchestrator.  
