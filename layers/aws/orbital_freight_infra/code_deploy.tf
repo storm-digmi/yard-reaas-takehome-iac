@@ -20,7 +20,7 @@ resource "aws_codedeploy_deployment_group" "lambda_dg" {
     }
 
     # Canary 10% for 5 minutes (built-in)
-    deployment_config_name = "CodeDeployDefault.LambdaCanary10Percent5Minutes"
+    deployment_config_name = "CodeDeployDefault.LambdaCanary10Percent2Minutes"
 
     alarm_configuration {
         alarms = [aws_cloudwatch_metric_alarm.lambda_errors.alarm_name]

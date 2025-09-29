@@ -13,11 +13,12 @@ resource "aws_lambda_function" "svc" {
     memory_size = var.lambda.memory_mb
     timeout = var.lambda.timeout_seconds
 
-    # environment {
-    #     variables = {
-    #     SECRET_NAME = aws_secretsmanager_secret.api_key.name
-    #     }
-    # }
+    environment {
+        variables = {
+            SUPER_SECRET_TOKEN_SECRET_ARN  = aws_secretsmanager_secret.super_token.arn
+            SUPER_SECRET_TOKEN_SECRET_NAME = aws_secretsmanager_secret.super_token.name
+        }
+    }
 
     # Nice error message if the image does not exist yet
     lifecycle {
