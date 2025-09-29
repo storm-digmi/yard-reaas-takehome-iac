@@ -28,3 +28,8 @@ description = "ECR image tag to deploy (must exist). Use 'latest' or a Git SHA."
 type = string
 default = "latest"
 }
+
+variable "alerts_email" {
+description = "SNS Subscription email"
+type = string
+}

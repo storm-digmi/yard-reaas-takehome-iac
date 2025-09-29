@@ -11,3 +11,5 @@ lambda = {
 }
 
 image_tag = "latest"
+
+alerts_email = "a.pindozzi@reply.it"
