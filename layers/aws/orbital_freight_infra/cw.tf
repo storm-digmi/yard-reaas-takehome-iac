@@ -39,3 +39,34 @@ resource "aws_cloudwatch_dashboard" "main" {
         ]
     })
 }
+
+
+resource "aws_cloudwatch_log_group" "lambda_lg" {
+  name              = "/aws/lambda/${aws_lambda_function.svc.function_name}"
+  retention_in_days = 14
+}
+
+
+resource "aws_cloudwatch_log_data_protection_policy" "mask_super_secret" {
+  log_group_name = aws_cloudwatch_log_group.lambda_lg.name
+
+
+  policy_document = jsonencode({
+    Name        = "${var.project_info.name}-log-masking"
+    Description = "Mask SUPER_SECRET_TOKEN value if it ever appears in logs"
+    Version     = "2021-06-01"
+    Statement   = [
+      {
+        Sid                  = "MaskExactSuperSecret"
+        DataIdentifier       = []
+        CustomDataIdentifier = [
+          {
+            Name  = "SuperSecretTokenExact"
+            Regex = random_password.super_secret_token.result
+          }
+        ]
+        Operation = { Deidentify = { MaskConfig = {} } }
+      }
+    ]
+  })
+}
