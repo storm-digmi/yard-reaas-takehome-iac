@@ -58,8 +58,8 @@ resource "aws_cloudwatch_log_data_protection_policy" "mask_super_secret" {
     Statement   = [
       {
         Sid                  = "MaskExactSuperSecret"
-        DataIdentifier       = []
-        CustomDataIdentifier = [
+        DataIdentifiers      = []
+        CustomDataIdentifiers = [
           {
             Name  = "SuperSecretTokenExact"
             Regex = random_password.super_secret_token.result
