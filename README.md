@@ -40,7 +40,7 @@ The infrastructure consists of the following components:
 ---
 
 ## Monitoring & Observability
-- **Logs**: Lambda writes to `/aws/lambda/<function-name>`. A **Data Protection Policy** ensures sensitive values from Secrets Manager are masked.  
+- **Logs**: Lambda writes to `/aws/lambda/orbital-freight-podinfo-svc`. A **Data Protection Policy** ensures sensitive values from Secrets Manager are masked.  
 - **Metrics**:  
   - Lambda: Invocations, Errors, Duration (P95).  
   - API Gateway: Requests, 4xx/5xx, Latency.  
